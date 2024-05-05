@@ -6,12 +6,24 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct unstressedApp: App {
+    @ObservedObject var user: UserViewModel = UserViewModel.getInstance()
+
+    init() {
+        FirebaseApp.configure()
+        user.checkAlreadySignedIn()
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if !user.loggedIn {
+                LoginView()
+            } else {
+                HomePageView()
+            }
         }
     }
 }

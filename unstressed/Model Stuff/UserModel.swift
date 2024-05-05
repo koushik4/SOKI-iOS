@@ -16,12 +16,31 @@ public class UserViewModel: ObservableObject {
     @Published var lastName = "";
     @Published var errorMessage = "";
     
-    private final var DEFAULT_ERROR_MESSAGE = "Something went wrong, please try again"
+    @Published var loggedIn = false;
     
+    private static var userModel:UserViewModel?
     
-    public init() {
-        
+    public final var DEFAULT_ERROR_MESSAGE = "Something went wrong, please try again"
+    
+    private init() {
     }
+    
+    public static func getInstance() -> UserViewModel {
+        if UserViewModel.userModel == nil {
+            UserViewModel.userModel = UserViewModel();
+        }
+        return UserViewModel.userModel ?? UserViewModel()
+    }
+    
+    
+    public func checkAlreadySignedIn() {
+        if let currentUser = Auth.auth().currentUser {
+            DBHelper.getUserWithIdAndDoIfExists(userId: currentUser.uid) {
+                self.loggedIn = true
+            }
+        }
+    }
+    
     
     public func login() {
         guard isValidEmail(email: email),
@@ -30,7 +49,6 @@ public class UserViewModel: ObservableObject {
             errorMessage = "Invalid Email/Password";
             return
         }
-        
         Auth.auth().signIn(withEmail: email, password: password) {(authResult, error) in
             if error != nil {
                 self.errorMessage = error?.localizedDescription ?? self.DEFAULT_ERROR_MESSAGE
@@ -39,7 +57,9 @@ public class UserViewModel: ObservableObject {
             if user == nil {
                 self.errorMessage = self.DEFAULT_ERROR_MESSAGE
             }
-            DBHelper.getUser(userId:user?.uid ?? "");
+            DBHelper.getUserWithIdAndDoIfExists(userId:user?.uid ?? "") {
+                self.loggedIn = true
+            };
             self.errorMessage = "";
         }
         
@@ -55,6 +75,7 @@ public class UserViewModel: ObservableObject {
             return
         }
         
+        AuthDBHelper.signUpDB(email: email, password: password)
         
         Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
             if error != nil {
@@ -74,8 +95,18 @@ public class UserViewModel: ObservableObject {
             DBHelper.addUser(user: DBUserCollection(userId: uid ?? "", email: self.email,
                                                     lastName: self.lastName, firstName: self.firstName,
                                                     assignedByMe: [], assignedTyMe: []));
-            print("Signed Up")
+            self.loggedIn = true
             self.errorMessage = "";
+        }
+    }
+    
+    public func signout() {
+        do {
+            try Auth.auth().signOut()
+            self.loggedIn = false;
+            print(self.loggedIn)
+        } catch let signOutError as NSError {
+          print("Error signing out: %@", signOutError)
         }
     }
     

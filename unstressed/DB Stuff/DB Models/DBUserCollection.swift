@@ -13,8 +13,8 @@ class DBUserCollection: Codable {
     let email: String
     let lastName: String
     let firstName: String
-    let assignedByMe: [String]?
-    let assignedTyMe: [String]?
+    var assignedByMe: [String]?
+    var assignedToMe: [String]?
     
     public init() {
         self.userId = ""
@@ -22,7 +22,7 @@ class DBUserCollection: Codable {
         self.lastName = ""
         self.firstName = ""
         self.assignedByMe = []
-        self.assignedTyMe = []
+        self.assignedToMe = []
     }
     
     init(userId: String, email: String, lastName: String, firstName: String, assignedByMe: [String], assignedTyMe: [String]) {
@@ -31,7 +31,7 @@ class DBUserCollection: Codable {
         self.lastName = lastName
         self.firstName = firstName
         self.assignedByMe = assignedByMe
-        self.assignedTyMe = assignedTyMe
+        self.assignedToMe = assignedTyMe
     }
     
     public func toDictionary() -> [String: Any] {
@@ -40,8 +40,8 @@ class DBUserCollection: Codable {
             "firstName": firstName,
             "lastName": lastName,
             "email": email,
-            "assignedByMe": [],
-            "assignedToMe": []
+            "assignedByMe": assignedByMe ?? [],
+            "assignedToMe": assignedToMe ?? []
             // Add more properties as needed
         ]
     }

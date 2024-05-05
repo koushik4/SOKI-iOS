@@ -11,7 +11,7 @@ struct HomePageView: View {
     let vSpace:CGFloat = 72;
     let hSpace:CGFloat = 35;
 
-    @State var active: Bool = false;
+    @State var showNewTask: Bool = false;
     
     var body: some View {
         NavigationView {
@@ -26,42 +26,41 @@ struct HomePageView: View {
                     
                     HStack(spacing: hSpace) {
                         NavigationLink {
-                            SignupView()
+                            // TODO: change
+                            TaskPageView(activeTab: Category.family.rawValue)
                         } label: {
-                            HomeCardView(action: {
-                                
-                            }, imageResource: .family, title: "Family")
+                            HomeCardView(imageResource: .family, title: "Family")
                         }
 
                     
                         NavigationLink {
-                            SignupView()
+                            // TODO: change
+                            TaskPageView(activeTab: Category.personal.rawValue)
                         } label: {
-                            HomeCardView(action: {
-                                
-                            }, imageResource: .personal, title: "Personal")
+                            HomeCardView(imageResource: .personal, title: "Personal")
                         }
                         
                     }
                     HStack(spacing: hSpace) {
                         NavigationLink {
-                            SignupView()
+                            TaskPageView(activeTab: Category.work.rawValue)
+
                         } label: {
-                            HomeCardView(action: {
-                                
-                            }, imageResource: .work, title: "Work")
+                            HomeCardView(imageResource: .work, title: "Work")
                         }
                         
                         NavigationLink {
-                            SignupView()
+                            TaskPageView(activeTab: Category.misc.rawValue)
+
                         } label: {
-                            HomeCardView(action: {
-                                
-                            }, imageResource: .misc, title: "Miscellaneous")
+                            HomeCardView(imageResource: .misc, title: "Miscellaneous")
                         }
                         
                     }
                 }
+                .toolbar(content: {
+                    ToolBarButtonView(showNewTask: showNewTask)
+                })
             }
         }
     }

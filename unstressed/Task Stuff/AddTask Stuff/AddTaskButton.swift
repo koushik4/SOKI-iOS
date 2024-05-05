@@ -20,6 +20,7 @@ struct AddTaskButton: View {
                     Circle()
                         .scaledToFit()
                         .foregroundColor(Constants.MEDIUM_COLOR)
+                        .shadow(radius: 15)
                 )
                 .foregroundColor(.white)
                 .bold()

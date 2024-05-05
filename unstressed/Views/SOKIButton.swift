@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct SOKIButton: View {
+    let buttonTitle:String
+    let color: Color
+    let action: () -> Void
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button {
+            // nada
+            action()
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .foregroundColor(color)
+                
+                Text(buttonTitle)
+                    .foregroundStyle(.white)
+                    .bold()
+            }.padding()
+        }
+        
     }
 }
 
 #Preview {
-    SOKIButton()
+    SOKIButton(buttonTitle: "Button title", color: Color.pink) {
+        // action
+    }
 }

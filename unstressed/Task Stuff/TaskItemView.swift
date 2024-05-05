@@ -8,50 +8,46 @@
 import SwiftUI
 
 struct TaskItemView: View {
-    var category:Category
-    
+    var uid: UUID = UUID()
+    @ObservedObject var taskModel:TaskModel
+    @State var toggle = false
     var body: some View {
-        TaskListView
-        
-    }
-    
-    var TaskListView: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: /*@START_MENU_TOKEN@*/25.0/*@END_MENU_TOKEN@*/)
-                .foregroundColor(.white)
-                .shadow(radius:8)
-                .frame(width: UIScreen.main.bounds.width * 8.5/10, height: 100)
-            
             VStack(alignment: .leading, spacing: 20) {
-                Text("Title")
-                    .font(.system(size: 25))
-                    .frame(alignment: .leading)
-                    .padding(.trailing, UIScreen.main.bounds.width * 6.3/10)
+                Text(taskModel.title)
+                    .font(.system(size: 18))
                     .foregroundColor(Constants.DARKER_COLOR)
-                HStack(spacing:120) {
+                
+                HStack(spacing:200) {
                     AssignView
-                    Text("24th May")
+                    Text(taskModel.dateFromMilliseconds())
                         .font(.system(size: 12))
                         .foregroundColor(Constants.DARKER_COLOR)
                     
                 }
             }
-        }
+            .frame(maxWidth: UIScreen.main.bounds.width-32)
+
+            .padding(8)
+            .padding(0)
+            .background {
+                RoundedRectangle(cornerRadius: 25.0)
+                    .foregroundColor(Constants.GRAY_BG)
+                    .shadow(color:.black.opacity(0.5), radius:8)
+                    .frame(maxWidth: UIScreen.main.bounds.width-25)
+                
+            }
     }
-    
+
     var AssignView: some View {
         HStack(spacing: 2) {
-            PersonView(title: "name")
+            PersonView(title: taskModel.assigneeFirstName)
             Text("->")
-            PersonView(title: "other_name")
+            PersonView(title: taskModel.assignerFirstName)
         }
-    
     }
-    
     
     func PersonView(title:String) -> some View {
         Text(title)
-            .padding(4)
             .font(.system(size: 12))
             .foregroundColor(Constants.DARKER_COLOR)
         .background {
@@ -67,5 +63,5 @@ struct TaskItemView: View {
 
 
 #Preview {
-    TaskItemView(category: Category.home)
+    TaskItemView(taskModel: TaskModel().title(title: "Make me ").assigneeFirstName(email: "Koushik").assignerFirstName(email: "anisha"))
 }
